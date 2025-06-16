@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Інформація про села</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Список населених пунктів</h1>
+<button onclick="loadData()">Завантажити</button>
+
+<table id="villageTable" style="display:none;">
+  <thead>
+    <tr>
+      <th>Тип</th>
+      <th>Назва</th>
+      <th>Громада</th>
+      <th>Район</th>
+      <th>Область</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  function loadData() {
+    fetch('data.txt')
+      .then(response => response.text())
+      .then(text => {
+        const rows = text.trim().split('\n\n'); // розбити на записи
+        const tbody = document.querySelector('#villageTable tbody');
+        tbody.innerHTML = ''; // очистити попередні дані
+
+        rows.forEach(entry => {
+          const parts = entry.split('\n');
+          if (parts.length === 5) {
+            const row = document.createElement('tr');
+            parts.forEach(part => {
+              const td = document.createElement('td');
+              td.textContent = part;
+              row.appendChild(td);
+            });
+            tbody.appendChild(row);
+          }
+        });
+
+        document.getElementById('villageTable').style.display = 'table';
+      })
+      .catch(error => {
+        alert('Помилка завантаження: ' + error);
+      });
+  }
+</script>
+
+</body>
+</html>
